@@ -10,6 +10,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# ---------------- Dependencies ----------------
+# Eigen is required by continuous examples
+find_package(Eigen3 REQUIRED)
+
 # ---------------- Include paths ----------------
 # Framework headers + example-local headers
 include_directories(
@@ -23,17 +27,38 @@ add_executable(offline_pf_example
     examples/offline_pf_example/model.cpp
 )
 
+target_link_libraries(offline_pf_example
+    Eigen3::Eigen
+)
+
 # ---------------- Example: offline_pf_large_example ----------------
 add_executable(offline_pf_large_example
     examples/offline_pf_example/offline_large_main.cpp
     examples/offline_pf_example/model.cpp
 )
 
+target_link_libraries(offline_pf_large_example
+    Eigen3::Eigen
+)
+
+# ---------------- Example: online_pf_mcst_example ----------------
+add_executable(online_pf_mcst_example
+    examples/online_pf_mcst_example/online_main.cpp
+    examples/online_pf_mcst_example/model.cpp
+    src/pomdp/history/sequence_history.cpp
+)
+
+target_link_libraries(online_pf_mcst_example
+    Eigen3::Eigen
+)
+
 # ---------------- Warnings ----------------
 if (MSVC)
     target_compile_options(offline_pf_example PRIVATE /W4)
     target_compile_options(offline_pf_large_example PRIVATE /W4)
+    target_compile_options(online_pf_mcst_example PRIVATE /W4)
 else()
     target_compile_options(offline_pf_example PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(offline_pf_large_example PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(online_pf_mcst_example PRIVATE -Wall -Wextra -Wpedantic)
 endif()
