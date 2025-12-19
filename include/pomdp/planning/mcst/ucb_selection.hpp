@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cmath>
-#include <limits>
-
 #include <pomdp/action.hpp>
 #include <pomdp/planning/mcst/mcst_selection.hpp>
 
@@ -21,39 +18,11 @@ namespace pomdp::mcst {
  */
 class UCBSelection : public SelectionStrategy {
 public:
-    explicit UCBSelection(double exploration_constant = 1.4)
-        : c_(exploration_constant)
-    {}
+    explicit UCBSelection(double exploration_constant = 1.4);
 
-    Action select_existing(const Node& node) const override {
-        Action best_action;
-        double best_score = -std::numeric_limits<double>::infinity();
-
-        const double parent_visits =
-            static_cast<double>(node.visits + 1); // +1 for numerical safety
-
-        for (const auto& [action, entry] : node.actions) {
-            const auto& stats = entry.stats;
-
-            // Skip unvisited actions (should be expanded separately)
-            if (stats.visits == 0) {
-                continue;
-            }
-
-            const double mean = stats.mean();
-            const double exploration =
-                c_ * std::sqrt(std::log(parent_visits) / stats.visits);
-
-            const double score = mean + exploration;
-
-            if (score > best_score) {
-                best_score = score;
-                best_action = action;
-            }
-        }
-
-        return best_action;
-    }
+    Action select_existing(
+        const Node& node
+    ) const override;
 
 private:
     double c_;

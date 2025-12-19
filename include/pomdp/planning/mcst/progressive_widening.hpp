@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cmath>
 #include <optional>
 
 #include <pomdp/action.hpp>
@@ -12,7 +11,7 @@ namespace pomdp::mcst {
 /**
  * @brief Progressive Widening (PW) strategy.
  *
- * Allows action expansion according to:
+ * Expansion rule:
  *
  *   |A(s)| < k * N(s)^alpha
  *
@@ -22,7 +21,7 @@ namespace pomdp::mcst {
  *  - k, α   : hyperparameters
  *
  * This strategy:
- *  - only proposes expansion
+ *  - ONLY proposes expansion
  *  - does NOT select among existing actions
  */
 class ProgressiveWidening : public SelectionStrategy {
@@ -31,43 +30,23 @@ public:
         const ActionSampler& action_sampler,
         double k = 1.0,
         double alpha = 0.5
-    )
-        : action_sampler_(action_sampler)
-        , k_(k)
-        , alpha_(alpha)
-    {}
+    );
 
     /**
      * @brief PW never selects existing actions.
      *
-     * Selection should be handled by another strategy (e.g. UCB).
+     * Must be composed with a selector (e.g. UCB).
      */
-    Action select_existing(const Node& /*node*/) const override {
-        // This should never be called.
-        // Use a composite strategy with UCB.
-        throw std::logic_error(
-            "ProgressiveWidening does not select existing actions."
-        );
-    }
+    Action select_existing(
+        const Node& node
+    ) const override;
 
     /**
      * @brief Decide whether to expand a new action.
      */
     std::optional<Action> propose_expansion(
         const Node& node
-    ) const override
-    {
-        const std::size_t num_actions = node.actions.size();
-        const std::size_t visits = node.visits + 1; // safety
-
-        const double threshold = k_ * std::pow(visits, alpha_);
-
-        if (static_cast<double>(num_actions) < threshold) {
-            return action_sampler_.sample_action(dummy_belief_);
-        }
-
-        return std::nullopt;
-    }
+    ) const override;
 
 private:
     const ActionSampler& action_sampler_;

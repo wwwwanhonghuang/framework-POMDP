@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vector>
 #include <memory>
 #include <optional>
+#include <vector>
 
 #include <pomdp/planning/mcst/mcst_selection.hpp>
 
@@ -24,35 +24,23 @@ namespace pomdp::mcst {
  */
 class CompositeSelection : public SelectionStrategy {
 public:
-    CompositeSelection() = default;
+    CompositeSelection();
 
     explicit CompositeSelection(
         std::vector<std::shared_ptr<SelectionStrategy>> strategies
-    )
-        : strategies_(std::move(strategies))
-    {}
+    );
 
     /**
      * @brief Add a strategy (order matters).
      */
-    void add_strategy(std::shared_ptr<SelectionStrategy> strategy) {
-        strategies_.push_back(std::move(strategy));
-    }
+    void add_strategy(std::shared_ptr<SelectionStrategy> strategy);
 
     /**
      * @brief Attempt expansion first.
      */
     std::optional<Action> propose_expansion(
         const Node& node
-    ) const override
-    {
-        for (const auto& s : strategies_) {
-            if (auto a = s->propose_expansion(node)) {
-                return a;
-            }
-        }
-        return std::nullopt;
-    }
+    ) const override;
 
     /**
      * @brief Select among existing actions.
@@ -61,23 +49,7 @@ public:
      */
     Action select_existing(
         const Node& node
-    ) const override
-    {
-        for (const auto& s : strategies_) {
-            // Convention:
-            // strategies that don't implement selection should throw
-            // or be ordered after a selector (e.g., UCB).
-            try {
-                return s->select_existing(node);
-            } catch (...) {
-                // ignore and try next
-            }
-        }
-
-        throw std::logic_error(
-            "CompositeSelection: no strategy could select an action."
-        );
-    }
+    ) const override;
 
 private:
     std::vector<std::shared_ptr<SelectionStrategy>> strategies_;

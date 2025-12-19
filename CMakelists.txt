@@ -45,8 +45,16 @@ target_link_libraries(offline_pf_large_example
 add_executable(online_pf_mcst_example
     examples/online_pf_mcst_example/online_main.cpp
     examples/online_pf_mcst_example/model.cpp
+
     src/pomdp/history/sequence_history.cpp
+    src/pomdp/planning/planner_runner.cpp
+
+    src/pomdp/planning/mcst/composite_selection.cpp
+    src/pomdp/planning/mcst/ucb_selection.cpp
+    src/pomdp/planning/mcst/progressive_widening.cpp
+    src/pomdp/planning/mcst/pomcp_node.cpp
 )
+
 
 target_link_libraries(online_pf_mcst_example
     Eigen3::Eigen

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+
 #include <pomdp/updater.hpp>
 #include <pomdp/pomdp_model.hpp>
 #include <pomdp/particle_filter/pf_belief.hpp>
@@ -12,14 +13,11 @@ namespace pomdp {
 /**
  * Particle Filter belief updater.
  *
- * This class coordinates:
+ * Coordinates:
  *  - proposal (sampling)
- *  - weighting (via model kernels)
+ *  - weighting (model likelihoods)
  *  - normalization
  *  - optional resampling
- *
- * It is templated on StateT because it operates
- * on particle-based beliefs.
  */
 template <typename StateT>
 class ParticleFilterUpdater : public BeliefUpdater {
@@ -29,52 +27,14 @@ public:
         const ProposalKernel<StateT>& proposal,
         const Resampler<StateT>& resampler,
         double ess_threshold = 0.5
-    )
-        : T_(model.transition())
-        , O_(model.observation())
-        , Q_(proposal)
-        , R_(resampler)
-        , ess_threshold_(ess_threshold)
-    {}
+    );
 
     std::unique_ptr<Belief> update(
         const Belief& prev,
         const Action& action,
         const Observation& observation,
-        const History& /*history*/
-    ) const override
-    {
-        const auto& b_prev =
-            static_cast<const ParticleBelief<StateT>&>(prev);
-
-        auto b_new = std::make_unique<ParticleBelief<StateT>>();
-        b_new->particles.reserve(b_prev.particles.size());
-
-        // --- Propagate and weight ---
-        for (const auto& p : b_prev.particles) {
-            StateT x_new = Q_.sample(p.x, action, observation);
-
-            double log_w =
-                T_.transition_log_prob(x_new, p.x, action) +
-                O_.observation_log_prob(observation, x_new);
-
-            b_new->particles.push_back(
-                Particle<StateT>{x_new, p.weight * std::exp(log_w)}
-            );
-        }
-
-        // --- Normalize ---
-        b_new->normalize();
-
-        // --- Resample if needed ---
-        if (b_new->effective_sample_size()
-            < ess_threshold_ * b_new->particles.size())
-        {
-            R_.resample(*b_new);
-        }
-
-        return b_new;
-    }
+        const History& history
+    ) const override;
 
 private:
     const TransitionKernel<StateT>& T_;
@@ -85,3 +45,6 @@ private:
 };
 
 } // namespace pomdp
+
+// ---- template implementation ----
+#include "particle_filter_updater.tpp"

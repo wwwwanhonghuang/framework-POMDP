@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdint>
+#include <functional> 
+#include <cstddef>
 
 namespace pomdp {
 
@@ -14,3 +16,15 @@ struct Action {
 };
 
 }
+
+
+namespace std {
+
+template<>
+struct hash<pomdp::Action> {
+    std::size_t operator()(const pomdp::Action& a) const noexcept {
+        return std::hash<int>{}(a.id);
+    }
+};
+
+} // namespace std
