@@ -22,7 +22,7 @@
 #include <pomdp/planning/mcst/ucb_selection.hpp>
 #include <pomdp/planning/mcst/progressive_widening.hpp>
 #include <pomdp/planning/mcst/composite_selection.hpp>
-#include <pomdp/particle_filter/proposal_kernel.hpp>
+#include <bayesian_filter/particle_filter/proposal_kernel.hpp>
 
 #include "proposal.hpp"
 
@@ -111,7 +111,7 @@ class ProposalKernelAdapter
 {
 public:
     ProposalKernelAdapter(
-        const online_example::BootstrapProposal<State>& proposal,
+        const online_example::BootstrapProposal<State, pomdp::Action, pomdp::Observation>& proposal,
         const bayesian_filter::TransitionModel<State, pomdp::Action>& transition
     )
         : proposal_(proposal),
@@ -139,7 +139,7 @@ public:
     }
 
 private:
-    const online_example::BootstrapProposal<State>& proposal_;
+    const online_example::BootstrapProposal<State, pomdp::Action, pomdp::Observation>& proposal_;
     const bayesian_filter::TransitionModel<State, pomdp::Action>& transition_;
 };
 
@@ -177,7 +177,7 @@ int main() {
         belief.particles.push_back(p);
     }
 
-    BootstrapProposal<State> proposal(model);
+    online_example::BootstrapProposal<State, pomdp::Action, pomdp::Observation> proposal(model);
 
     std::mt19937 rng(42);
     bayesian_filter::SystematicResampler<State> resampler(rng);

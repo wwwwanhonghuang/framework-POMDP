@@ -1,6 +1,6 @@
 #pragma once
 
-#include <pomdp/particle_filter/proposal_kernel.hpp>
+#include <bayesian_filter/particle_filter/proposal_kernel.hpp>
 #include "model.hpp"
 
 namespace online_example {
@@ -12,11 +12,22 @@ namespace online_example {
  *
  *   q(x_t | x_{t-1}, a_t, o_t) = p(x_t | x_{t-1}, a_t)
  *
- * Weighting is handled by transition + observation likelihoods
- * inside ParticleFilterUpdater.
+ * Observation is ignored in sampling.
  */
-template <typename StateT>
-class BootstrapProposal : public pomdp::ProposalKernel<StateT> {
+
+
+template <
+    typename StateT,
+    typename ActionT,
+    typename ObservationT
+>
+class BootstrapProposal
+    : public bayesian_filter::ProposalKernel<
+          StateT,
+          ActionT,
+          ObservationT
+      >
+{
 public:
     explicit BootstrapProposal(const ContinuousModel& model)
         : model_(model)
@@ -24,13 +35,24 @@ public:
 
     StateT sample(
         const StateT& prev,
-        const pomdp::Action& action,
-        const pomdp::Observation& obs
+        const ActionT& action,
+        const ObservationT& /*obs*/
     ) const override
     {
-        // observation is ignored for bootstrap proposal
-        (void)obs;
         return model_.step(prev, action).next_state;
+    }
+
+    double probability(
+        const StateT& next,
+        const StateT& prev,
+        const ActionT& action,
+        const ObservationT& /*obs*/
+    ) const override
+    {
+        // Bootstrap proposal: q = p_transition
+        return std::exp(
+            model_.transition_log_prob(next, prev, action)
+        );
     }
 
 private:
