@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bayesian_filter/belief/particle_belief.hpp>
+#include <bayesian_filter/particle_filter/particle_distribution.hpp>
 #include <pomdp/belief.hpp>
 
 namespace pomdp {
@@ -17,10 +17,10 @@ namespace pomdp {
 template <typename StateT>
 class POMDPParticleBelief
     : public Belief
-    , public bayesian_filter::ParticleBelief<StateT>
+    , public bayesian_filter::ParticleDistribution<StateT>
 {
 public:
-    using Base = bayesian_filter::ParticleBelief<StateT>;
+    using Base = bayesian_filter::ParticleDistribution<StateT>;
     using Base::Base; // inherit constructors
 
     // No normalize(), no ESS here.

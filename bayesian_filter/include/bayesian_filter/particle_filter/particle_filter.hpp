@@ -6,7 +6,7 @@
 #include <bayesian_filter/core/transition_model.hpp>
 #include <bayesian_filter/core/observation_model.hpp>
 
-#include <bayesian_filter/belief/particle_belief.hpp>
+#include <bayesian_filter/particle_filter/particle_distribution.hpp>
 #include <bayesian_filter/particle_filter/proposal_kernel.hpp>
 #include <bayesian_filter/particle_filter/resampler.hpp>
 
@@ -28,7 +28,7 @@ template <
 class ParticleFilter
     : public BayesianFilter<StateT, ControlT, ObservationT> {
 public:
-    using BeliefT   = ParticleBelief<StateT>;
+    using BeliefT   = ParticleDistribution<StateT>;
     using ParticleT = typename BeliefT::ParticleT;
 
     ParticleFilter(

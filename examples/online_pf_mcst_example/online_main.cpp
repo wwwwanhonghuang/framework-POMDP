@@ -36,7 +36,6 @@
 using namespace online_example;
 
 
-
 // 真实系统（state 不可见）
 //     ↓ 执行动作
 // 观测 o_t
@@ -171,7 +170,7 @@ int main() {
         State x(4);
         x.setZero();
 
-        bayesian_filter::ParticleBelief<State>::Particle p;
+        bayesian_filter::ParticleDistribution<State>::Particle p;
         p.state = x;
         p.weight = 1.0 / NUM_PARTICLES;
 

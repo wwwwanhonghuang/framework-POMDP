@@ -20,7 +20,7 @@ namespace bayesian_filter {
  * It contains NO filtering logic.
  */
 template <typename StateT>
-class ParticleBelief : public StateDistribution {
+class ParticleDistribution : public StateDistribution {
 public:
     struct Particle {
         StateT state;
@@ -47,11 +47,11 @@ public:
      * @brief Polymorphic copy.
      */
     std::unique_ptr<StateDistribution> clone() const override {
-        return std::make_unique<ParticleBelief<StateT>>(*this);
+        return std::make_unique<ParticleDistribution<StateT>>(*this);
     }
 };
 
 } // namespace bayesian_filter
 
 // ---- template implementation ----
-#include "particle_belief.tpp"
+#include "particle_distribution.tpp"

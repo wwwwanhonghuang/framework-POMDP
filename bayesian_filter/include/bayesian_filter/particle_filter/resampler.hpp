@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <bayesian_filter/belief/particle_belief.hpp>
+#include <bayesian_filter/particle_filter/particle_distribution.hpp>
 
 namespace bayesian_filter {
 
@@ -18,7 +18,7 @@ namespace bayesian_filter {
 template <typename StateT>
 class Resampler {
 public:
-    using ParticleT = typename bayesian_filter::ParticleBelief<StateT>::Particle;
+    using ParticleT = typename bayesian_filter::ParticleDistribution<StateT>::Particle;
 
     virtual ~Resampler() = default;
 

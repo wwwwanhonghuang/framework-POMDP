@@ -5,7 +5,7 @@
 namespace bayesian_filter {
 
 template <typename StateT>
-void ParticleBelief<StateT>::normalize()
+void ParticleDistribution<StateT>::normalize()
 {
     double sum = 0.0;
     for (const auto& p : particles) {
@@ -21,7 +21,7 @@ void ParticleBelief<StateT>::normalize()
 }
 
 template <typename StateT>
-double ParticleBelief<StateT>::effective_sample_size() const
+double ParticleDistribution<StateT>::effective_sample_size() const
 {
     double sq_sum = 0.0;
     for (const auto& p : particles) {
