@@ -8,7 +8,7 @@
 #include <pomdp/history/sequence_history.hpp>
 
 #include <pomdp/belief/pf_belief.hpp>
-#include <pomdp/updater/particle_filter_updater.hpp>
+#include <pomdp/adapters/bayesian_filter_adapter.hpp>
 
 #include <pomdp/planning/planner_runner.hpp>
 
