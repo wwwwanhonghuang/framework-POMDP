@@ -1,40 +1,30 @@
 #pragma once
 
-#include <vector>
-
+#include <bayesian_filter/belief/particle_belief.hpp>
 #include <pomdp/belief.hpp>
-#include <pomdp/particle_filter/particle.hpp>
 
 namespace pomdp {
 
 /**
- * Particle-based belief representation.
+ * @brief Particle-based belief for POMDP.
  *
- * Purely representational:
- *  - stores particles
- *  - provides minimal numerical utilities
+ * This class:
+ *  - reuses bayesian_filter::ParticleBelief for all particle math
+ *  - tags it as a POMDP Belief (epistemic state)
+ *
+ * NO particle logic is reimplemented here.
  */
 template <typename StateT>
-class ParticleBelief : public Belief {
+class POMDPParticleBelief
+    : public Belief
+    , public bayesian_filter::ParticleBelief<StateT>
+{
 public:
-    using ParticleT = Particle<StateT>;
+    using Base = bayesian_filter::ParticleBelief<StateT>;
+    using Base::Base; // inherit constructors
 
-    std::vector<ParticleT> particles;
-
-    /**
-     * Normalize particle weights:
-     *   sum_i w_i = 1
-     */
-    void normalize();
-
-    /**
-     * Effective Sample Size (ESS):
-     *   ESS = 1 / sum_i (w_i^2)
-     */
-    double effective_sample_size() const;
+    // No normalize(), no ESS here.
+    // All particle logic lives in the Bayesian layer.
 };
 
 } // namespace pomdp
-
-// ---- template implementation ----
-#include "pf_belief.tpp"

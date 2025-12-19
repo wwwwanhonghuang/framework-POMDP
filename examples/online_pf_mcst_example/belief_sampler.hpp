@@ -29,7 +29,7 @@ public:
     {
         // Expect PF belief
         const auto& pb =
-            dynamic_cast<const pomdp::ParticleBelief<StateT>&>(belief);
+            dynamic_cast<const pomdp::POMDPParticleBelief<StateT>&>(belief);
 
         const auto& particles = pb.particles;
 
@@ -45,12 +45,12 @@ public:
         for (const auto& p : particles) {
             accum += p.weight;
             if (r <= accum) {
-                return p.x;
+                return p.state;
             }
         }
 
         // Fallback (numerical safety)
-        return particles.back().x;
+        return particles.back().state;
     }
 };
 

@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-namespace pomdp {
+namespace bayesian_filter {
 
 template <typename StateT>
 void ParticleBelief<StateT>::normalize()
