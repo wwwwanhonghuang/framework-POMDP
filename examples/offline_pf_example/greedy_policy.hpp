@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <pomdp/policy.hpp>
-#include <pomdp/particle_filter/pf_belief.hpp>
+#include <pomdp/belief/pf_belief.hpp>
 #include "model.hpp"
 
 namespace example {

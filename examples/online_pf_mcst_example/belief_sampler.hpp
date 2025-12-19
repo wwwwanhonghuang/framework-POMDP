@@ -3,7 +3,7 @@
 #include <random>
 
 #include <pomdp/planning/belief_sampler.hpp>
-#include <pomdp/particle_filter/pf_belief.hpp>
+#include <pomdp/belief/pf_belief.hpp>
 
 namespace online_example {
 

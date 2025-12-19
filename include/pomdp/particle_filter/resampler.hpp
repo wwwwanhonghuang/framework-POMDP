@@ -1,6 +1,6 @@
 #pragma once
 
-#include <pomdp/particle_filter/pf_belief.hpp>
+#include <pomdp/belief/pf_belief.hpp>
 
 namespace pomdp {
 

@@ -7,7 +7,7 @@
 #include <pomdp/history.hpp>
 #include <pomdp/belief.hpp>
 
-#include <pomdp/particle_filter/pf_belief.hpp>
+#include <pomdp/belief/pf_belief.hpp>
 #include <pomdp/particle_filter/systematic_resampler.hpp>
 #include <pomdp/updater/particle_filter_updater.hpp>
 

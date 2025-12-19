@@ -7,7 +7,7 @@
 #include <pomdp/history.hpp>
 #include <pomdp/history/sequence_history.hpp>
 
-#include <pomdp/particle_filter/pf_belief.hpp>
+#include <pomdp/belief/pf_belief.hpp>
 #include <pomdp/updater/particle_filter_updater.hpp>
 
 #include <pomdp/planning/planner_runner.hpp>
@@ -29,8 +29,36 @@
 
 
 
-
 using namespace online_example;
+
+
+
+// [真实系统]
+//    ↓ step()
+// [observation]
+//    ↓
+// [Particle Filter belief update]   ← 外部完成
+//    ↓
+// [belief + history]
+//    ↓
+// [POMCP / MCST planner]
+//    ↓
+// [action]
+
+
+
+// 在 POMCP / MCST 中，树是 两类节点交替出现的：
+
+// History Node (belief node)
+//     ↓ choose action
+// Action Node
+//     ↓ sample transition
+// History Node
+//     ↓ choose action
+// Action Node
+//     ...
+
+// UCB 只在“同一个 history node 下的 action nodes”之间选
 
 int main() {
     // ------------------------------------------------------------

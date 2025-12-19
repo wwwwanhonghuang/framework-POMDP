@@ -4,7 +4,7 @@
 
 #include <pomdp/updater.hpp>
 #include <pomdp/pomdp_model.hpp>
-#include <pomdp/particle_filter/pf_belief.hpp>
+#include <pomdp/belief/pf_belief.hpp>
 #include <pomdp/particle_filter/proposal_kernel.hpp>
 #include <pomdp/particle_filter/resampler.hpp>
 
